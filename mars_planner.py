@@ -154,6 +154,37 @@ def mission_complete(state) :
             and not state.holding_sample)
 
 
+
+def move_to_sample(state):
+        return state.loc == "sample"
+
+def remove_sample(state):
+        return state.sample_extracted
+
+def return_to_charger(state):
+        return state.loc == "battery" and state.charged
+
+def decompose_problem():
+    ## Subproblem 1: Move to the sample site
+    print("Solving Subproblem 1: Move to Sample")
+    s = RoverState()
+    result_move_to_sample = breadth_first_search(s, action_list, move_to_sample)
+    if result_move_to_sample:
+        print(f"Subproblem 1 solved, number of states generated: {result_move_to_sample}")
+
+    ## Subproblem 2: Extract the sample
+    print("\nSolving Subproblem 2: Extract Sample")
+    result_remove_sample = breadth_first_search(result_move_to_sample[0], action_list, remove_sample)
+    if result_remove_sample:
+        print(f"Subproblem 2 solved, states generated: {result_remove_sample}")
+
+    ## Subproblem 3: Return to the charging station
+    print("\nSolving Subproblem 3: Return to Charger")
+    result_return_to_charger = breadth_first_search(result_remove_sample[0], action_list, return_to_charger)
+    if result_return_to_charger:
+        print(f"Subproblem 3 solved, states generated: {result_return_to_charger}")
+
+
 if __name__=="__main__" :
     s = RoverState()
     result = breadth_first_search(s, action_list, mission_complete)
