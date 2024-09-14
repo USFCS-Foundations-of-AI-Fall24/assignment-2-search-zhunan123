@@ -98,9 +98,23 @@ def charge(state) :
 action_list = [charge, drop_sample, pick_up_sample,
                move_to_sample, move_to_battery, move_to_station]
 
+
 def battery_goal(state) :
     return state.loc == "battery"
 ## add your goals here.
+
+
+def sample_extract(state):
+    return state.sample_extracted
+
+
+def holding_sample(state):
+    return state.holding_sample
+
+
+def sample_dropped_at_station(state):
+    return state.loc == "station" and not state.holding_sample and state.sample_extracted
+
 
 def mission_complete(state) :
     return (state.loc == "battery"
