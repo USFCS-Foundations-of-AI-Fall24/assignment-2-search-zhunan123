@@ -1,0 +1,8 @@
+Charger,x,x,x,x,x,x,red
+x,red,red,red,red,red,x,red
+red,red,red,x,x,x,x,red
+red,red,red,x,red,red,red,x
+x,x,x,x,x,red red,x
+x,red,red,red,x,x,x,x
+red,red,red,red,red,x,red,red
+red,red,x,x,x,x,x,Samples

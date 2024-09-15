@@ -1,4 +1,5 @@
 from queue import PriorityQueue
+from Graph import *
 
 class map_state() :
     ## f = total estimated cost
@@ -50,4 +51,51 @@ def sld(state) :
 ## you implement this. Open the file filename, read in each line,
 ## construct a Graph object and assign it to self.mars_graph().
 def read_mars_graph(filename):
-    pass
+    mars_graph = Graph()
+
+    with open(filename, 'r') as f:
+        rows = f.readlines()
+
+    row_count = len(rows)
+    col_count = len(rows[0].strip().split(','))
+
+    i = 0
+    while i < row_count:
+        row = rows[i].strip()
+        cols = row.split(',')
+        j = 0
+        while j < col_count:
+            cell = cols[j].strip()
+            if cell == 'Charger':
+                charger_position = Node(f"{i},{j}")
+                mars_graph.add_node(charger_position)
+            elif cell == 'Samples':
+                samples_position = Node(f"{i},{j}")
+                mars_graph.add_node(samples_position)
+            elif cell != 'red':
+                current_node = Node(f"{i},{j}")
+                mars_graph.add_node(current_node)
+                # up cell
+                if i > 0 and rows[i - 1].strip().split(',')[j] != 'red':
+                    up_node = Node(f"{i - 1},{j}")
+                    mars_graph.add_edge(Edge(current_node, up_node))
+                # down cell
+                if i < row_count - 1 and rows[i + 1].strip().split(',')[j] != 'red':
+                    down_node = Node(f"{i + 1},{j}")
+                    mars_graph.add_edge(Edge(current_node, down_node))
+                # left cell
+                if j > 0 and cols[j - 1] != 'red':
+                    left_node = Node(f"{i},{j - 1}")
+                    mars_graph.add_edge(Edge(current_node, left_node))
+                # right cell
+                if j < col_count - 1 and cols[j + 1] != 'red':
+                    right_node = Node(f"{i},{j + 1}")
+                    mars_graph.add_edge(Edge(current_node, right_node))
+            j += 1
+        i += 1
+    return mars_graph
+
+
+
+
+
