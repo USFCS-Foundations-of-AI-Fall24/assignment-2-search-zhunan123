@@ -73,7 +73,11 @@ def h1(state) :
 
 ## you do this - return the straight-line distance between the state and (1,1)
 def sld(state) :
-    x1, y1 = map(int, state.location.split(','))
+    if isinstance(state, map_state):
+        loc = state.location
+    elif isinstance(state, Node):
+        loc = state.value
+    x1, y1 = map(int, loc.split(','))
     x2, y2 = (0, 0)
     return sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
