@@ -52,6 +52,11 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
             print(f"Total states generated: {state_count}")
             return current_state
 
+        neighbors = current_state.mars_graph.get_edges(Node(current_state.location))
+        if not neighbors:
+            print(f"No neighbors found for state {current_state.location}. Path is blocked.")
+            continue
+
         for edge in current_state.mars_graph.get_edges(Node(current_state.location)):
             next_node = edge.dest
             next_state = map_state(location=next_node.value, mars_graph=current_state.mars_graph,
@@ -66,6 +71,8 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
                 previous_state[next_state] = current_state
                 closed_list[next_state] = new_cost
                 print(f"Adding state: {next_state.location} with total cost: {total_cost}")
+    print(f"Goal not reachable from {start_state.location}. Exiting.")
+    return None
 
 ## default heuristic - we can use this to implement uniform cost search
 def h1(state) :
