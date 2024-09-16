@@ -6,11 +6,11 @@ class Testmap_state(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.mars_graph = read_mars_graph('marsmap.txt')
+        cls.mars_graph = read_mars_graph('mars_map.txt')
 
-        print("Checking neighbors for 2,4:")
-        for edge in cls.mars_graph.get_edges(Node("2,4")):
-            print(f"2,4 -> {edge.dest}")
+        print("Checking neighbors for 1,2:")
+        for edge in cls.mars_graph.get_edges(Node("1,2")):
+            print(f"1,2 -> {edge.dest}")
 
 
     def test_is_lt (self) :
@@ -26,13 +26,13 @@ class Testmap_state(TestCase):
         self.assertLessEqual(val, 14)
 
     def test_uniform_cost_search(self):
-        start_state = map_state(location="7,7", mars_graph=self.mars_graph)
+        start_state = map_state(location="8,8", mars_graph=self.mars_graph)
         goal_state = a_star(start_state, heuristic_fn=h1, goal_test=lambda s: s.is_goal(),use_closed_list=True)
         self.assertIsNotNone(goal_state)
         self.assertTrue(goal_state.is_goal())
 
     def test_astar(self):
-        start_state = map_state(location="7,7", mars_graph=self.mars_graph)
+        start_state = map_state(location="8,8", mars_graph=self.mars_graph)
         goal_state = a_star(start_state, heuristic_fn=sld, goal_test=lambda s: s.is_goal())
         self.assertIsNotNone(goal_state)
         self.assertTrue(goal_state.is_goal())

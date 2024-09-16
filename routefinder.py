@@ -31,7 +31,7 @@ class map_state() :
         return self.f <= other.f
 
     def is_goal(self):
-        return self.location == "0,0" # change from '1,1'
+        return self.location == "1,1"
 
 
 def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
@@ -78,48 +78,37 @@ def sld(state) :
     elif isinstance(state, Node):
         loc = state.value
     x1, y1 = map(int, loc.split(','))
-    x2, y2 = (0, 0)
+    x2, y2 = (1, 1)
     return sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
 ## you implement this. Open the file filename, read in each line,
 ## construct a Graph object and assign it to self.mars_graph().
 def read_mars_graph(filename):
     mars_graph = Graph()
-
+    node_map = {}
     with open(filename, 'r') as f:
-        rows = [row.strip() for row in f.readlines() if row.strip()]
+        lines = f.readlines()
 
-    row_count = len(rows)
-    col_count = len(rows[0].split(','))
+    for line in lines:
+        node, neighbors = line.split(':')
+        node = node.strip()
+        neighbors = neighbors.strip().split()
+        if node not in node_map:
+            current_node = Node(node)
+            node_map[node] = current_node
+            mars_graph.add_node(current_node)
+        else:
+            current_node = node_map[node]
+        # Add edges for each neighbor
+        for neighbor in neighbors:
+            if neighbor not in node_map:
+                neighbor_node = Node(neighbor)
+                node_map[neighbor] = neighbor_node
+                mars_graph.add_node(neighbor_node)
+            else:
+                neighbor_node = node_map[neighbor]
+            mars_graph.add_edge(Edge(current_node, neighbor_node, 1))
 
-    i = 0
-    while i < row_count:
-        row = rows[i].strip()
-        cols = row.split(',')
-        j = 0
-        while j < col_count:
-            cell = cols[j].strip()
-            if cell != 'red':
-                current_node = Node(f"{i},{j}")
-                mars_graph.add_node(current_node)
-                # up cell
-                if i > 0 and rows[i - 1].strip().split(',')[j].strip() != 'red':
-                    up_node = Node(f"{i - 1},{j}")
-                    mars_graph.add_edge(Edge(current_node, up_node, 1))
-                # down cell
-                if i < row_count - 1 and rows[i + 1].strip().split(',')[j].strip() != 'red':
-                    down_node = Node(f"{i + 1},{j}")
-                    mars_graph.add_edge(Edge(current_node, down_node, 1))
-                # left cell
-                if j > 0 and cols[j - 1].strip() != 'red':
-                    left_node = Node(f"{i},{j - 1}")
-                    mars_graph.add_edge(Edge(current_node, left_node, 1))
-                # right cell
-                if j < col_count - 1 and cols[j + 1].strip() != 'red':
-                    right_node = Node(f"{i},{j + 1}")
-                    mars_graph.add_edge(Edge(current_node, right_node, 1))
-            j += 1
-        i += 1
     return mars_graph
 
 
